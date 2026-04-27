@@ -1557,7 +1557,7 @@ public:
 
 	// 0 <= percent < 256
 	// if (percent == 255) then opacq
-	static void SetTransparent(HWND hwnd, int percent);
+	static void setTransparent(HWND hwnd, int percent);
 
 	static void removeTransparent(HWND hwnd);
 

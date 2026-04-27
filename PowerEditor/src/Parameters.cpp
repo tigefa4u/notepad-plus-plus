@@ -1892,7 +1892,7 @@ void NppParameters::removeTransparent(HWND hwnd)
 }
 
 
-void NppParameters::SetTransparent(HWND hwnd, int percent)
+void NppParameters::setTransparent(HWND hwnd, int percent)
 {
 	::SetWindowLongPtr(hwnd, GWL_EXSTYLE, ::GetWindowLongPtr(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
 	if (percent > 255)
