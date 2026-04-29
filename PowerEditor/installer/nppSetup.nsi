@@ -21,6 +21,7 @@
 !include "nsDialogs.nsh" ; allows creation of custom pages in the installer
 !include "Memento.nsh"   ; remember user selections in the installer across runs
 !include "FileFunc.nsh"
+!include "WinVer.nsh"
 
 Unicode true			; Generate a Unicode installer. It can only be used outside of sections and functions and before any data is compressed.
 SetCompressor /SOLID lzma	; This reduces installer size by approx 30~35%
@@ -390,17 +391,20 @@ ${MementoSectionDone}
 
 ; Helper function for registering MSIX (Include the ExternalLocation flag for Sparse Packages)
 Function RegisterMSIX
-	nsExec::ExecToLog 'powershell -Command "Add-AppxPackage -Path \"$INSTDIR\contextMenu\NppShell.msix\" -ExternalLocation \"$INSTDIR\contextMenu\""'
+	; Windows 11 (build 22000+) is required for modern context menu via MSIX
+	${If} ${AtLeastWin11}
+		nsExec::ExecToLog 'powershell -Command "Add-AppxPackage -Path \"$INSTDIR\contextMenu\NppShell.msix\" -ExternalLocation \"$INSTDIR\contextMenu\""'
 
-	; Wait 2 seconds for the AppX service to finish indexing the new identity
-	Sleep 2000
-	
-	; Notify the Shell (Association Change + Interrupt)
-	System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, p 0, p 0)'
-	System::Call 'shell32::SHChangeNotify(i 0x00008000, i 0, p 0, p 0)'
+		; Wait 2 seconds for the AppX service to finish indexing the new identity
+		Sleep 2000
 
-	; Broadcast the change
-	SendMessage ${HWND_BROADCAST} ${WM_SETTINGCHANGE} 0 "STR:ShellState" /TIMEOUT=2000
+		; Notify the Shell (Association Change + Interrupt)
+		System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, p 0, p 0)'
+		System::Call 'shell32::SHChangeNotify(i 0x00008000, i 0, p 0, p 0)'
+
+		; Broadcast the change
+		SendMessage ${HWND_BROADCAST} ${WM_SETTINGCHANGE} 0 "STR:ShellState" /TIMEOUT=2000
+	${EndIf}
 FunctionEnd
 
 
