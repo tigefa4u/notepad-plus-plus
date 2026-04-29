@@ -373,13 +373,14 @@ ${MementoSection} "Context Menu Entry" explorerContextMenu
 
 	; Register MSIX for Windows 11 modern context menu
 	; Skip only for x86 Notepad++ installation on Windows 32 system
-	!ifdef ARCH64
+	!ifdef ARCH64 ; x64 installer
 		Call RegisterMSIX
-	!else ifdef ARCHARM64
+	!else ifdef ARCHARM64 ; arm64 installer
 		Call RegisterMSIX
-	!else
-		${If} ${RunningX64}
+	!else ; 32 bits installer
+		${If} ${RunningX64} ; running in Windows 64 bits
 			Call RegisterMSIX
+			SetRegView 32
 		${EndIf}
 	!endif
 
