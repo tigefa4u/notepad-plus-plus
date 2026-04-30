@@ -1504,7 +1504,7 @@ Voulez-vous continuer ?"/>
 			<NoBackupDoSaveFile title="Sauvegarde" message="Votre fichier de sauvegarde ne peut pas être trouvé (effacé de l’extérieur).
 Sauvegardez-le sinon vos données seront perdues
 Voulez-vous enregistrer le fichier « $STR_REPLACE$ » ?"/>
-			<DoReloadOrNot title="Recharger" message="« $STR_REPLACE$ »
+			<DoReloadOrNot title="Recharger" message="$STR_REPLACE$
 
 Ce fichier a été modifié par un autre programme.
 Voulez-vous le recharger ?"/>
